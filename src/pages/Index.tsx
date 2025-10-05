@@ -367,14 +367,14 @@ console.log(sum(1, 1));`
                 />
               </div>
               <div className="action-buttons">
-                <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
-                  {isLoading ? 'Analyzing...' : 'Analyze Code'}
-                </button>
                 {review && (
                   <button onClick={copyCode} className="action-btn copy-btn">
                     Copy Code
                   </button>
                 )}
+                <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
+                  {isLoading ? 'Analyzing...' : 'Analyze Code'}
+                </button>
               </div>
             </div>
             <div className="right">
@@ -391,12 +391,16 @@ console.log(sum(1, 1));`
                 )}
               </div>
               <div className="action-buttons">
-                <button onClick={resetApp} className="action-btn reset-btn" disabled={!review}>
-                  Reset
-                </button>
-                <button onClick={downloadPDF} className="action-btn download-btn" disabled={!review}>
-                  Generate PDF
-                </button>
+                {review && (
+                  <>
+                    <button onClick={resetApp} className="action-btn reset-btn">
+                      Reset
+                    </button>
+                    <button onClick={downloadPDF} className="action-btn download-btn">
+                      Generate PDF
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </>
