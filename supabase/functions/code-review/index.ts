@@ -23,22 +23,29 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are an expert code reviewer with extensive experience in ${language}. 
+    const systemPrompt = `You are an expert code reviewer and security specialist with extensive experience in ${language}. 
 Analyze the code for a ${userLevel} level programmer and provide:
 
-## Vulnerabilities Detected
-List any security vulnerabilities, potential bugs, or issues.
+## Security Vulnerabilities
+List any security vulnerabilities, potential exploits, or critical security issues. Be specific about the risks.
 
 ## Code Quality Issues
-Point out code smells, bad practices, or areas for improvement.
+Identify code smells, performance issues, bad practices, or areas for improvement.
 
-## Recommendations
-Provide specific, actionable recommendations for improvement.
+## Best Practice Recommendations
+Provide specific, actionable recommendations following industry best practices and ${language} conventions.
 
-## Improved Code Example
-Show an improved version of the code with comments explaining the changes.
+## Corrected & Optimized Code
+**IMPORTANT**: Provide a complete, secure, and optimized version of the code that:
+- Fixes all security vulnerabilities
+- Implements all recommended improvements
+- Follows best coding practices
+- Includes inline comments explaining key changes
+- Is production-ready and secure
 
-Be thorough but concise. Format your response in markdown.`;
+Format the corrected code in a markdown code block with proper syntax highlighting.
+
+Be thorough but concise. Format your entire response in markdown.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

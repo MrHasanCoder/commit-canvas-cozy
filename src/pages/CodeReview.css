@@ -180,7 +180,8 @@ main .right {
   flex-basis: 50%;
   border-radius: var(--border-radius);
   background-color: var(--bg-secondary);
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -191,7 +192,8 @@ main .right {
 
 main .left:hover,
 main .right:hover {
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-color);
 }
 
 /* Code Editor Section */
@@ -235,7 +237,9 @@ main .right:hover {
 }
 
 .analyze-btn,
-.download-btn {
+.download-btn,
+.copy-btn,
+.reset-btn {
   background-color: var(--accent-color);
   color: white;
   border: none;
@@ -248,6 +252,7 @@ main .right:hover {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .download-btn {
@@ -256,6 +261,28 @@ main .right:hover {
 
 .download-btn:hover:not(:disabled) {
   background-color: var(--success-hover);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.copy-btn {
+  background-color: #9333ea;
+}
+
+.copy-btn:hover:not(:disabled) {
+  background-color: #7e22ce;
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.reset-btn {
+  background-color: var(--warning-color);
+}
+
+.reset-btn:hover:not(:disabled) {
+  background-color: var(--warning-hover);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
 .analyze-btn:hover:not(:disabled) {
@@ -274,17 +301,18 @@ main .right:hover {
 .code {
   flex: 1;
   overflow: visible;
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-tertiary);
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-tertiary);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
   min-height: 500px;
   width: 100%;
   height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-color);
 }
 
 .dynamic-editor {
@@ -294,6 +322,20 @@ main .right:hover {
   right: 0;
   bottom: 0;
   height: 100% !important;
+  background-color: var(--bg-tertiary) !important;
+}
+
+.dynamic-editor textarea {
+  outline: none !important;
+  caret-color: var(--accent-color) !important;
+}
+
+.dynamic-editor textarea::selection {
+  background-color: var(--accent-light) !important;
+}
+
+.dynamic-editor pre {
+  background-color: transparent !important;
 }
 
 .code::-webkit-scrollbar {
@@ -319,16 +361,59 @@ main .right:hover {
 /* Results Section */
 .result-content {
   flex: 1;
-  padding: 1.5rem;
+  padding: 2rem;
   overflow: auto;
   font-size: 1rem;
-  line-height: 1.6;
-  background-color: var(--bg-secondary);
+  line-height: 1.8;
+  background-color: var(--bg-tertiary);
   border-radius: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
   max-height: calc(100vh - 200px);
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+}
+
+.result-content h2 {
+  color: var(--accent-color);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.result-content h3 {
+  color: var(--text-primary);
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+}
+
+.result-content pre {
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.result-content code {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.result-content ul,
+.result-content ol {
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.result-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.8;
 }
 
 .result-content::-webkit-scrollbar {

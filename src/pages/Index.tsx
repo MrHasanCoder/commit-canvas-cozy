@@ -20,7 +20,10 @@ const Index = () => {
   const { toast } = useToast()
   const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState('codeReview')
-  const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme')
+    return saved ? saved === 'dark' : true
+  })
   const [language, setLanguage] = useState('javascript')
   const [userLevel, setUserLevel] = useState('intermediate')
   const [code, setCode] = useState(` function sum() {
@@ -124,6 +127,8 @@ console.log(sum(1, 1));`
   useEffect(() => {
     prism.highlightAll()
     document.documentElement.classList.toggle('dark', darkMode)
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   useEffect(() => {
@@ -183,19 +188,29 @@ console.log(sum(1, 1));`
   function downloadPDF() {
     const element = document.createElement('div')
     element.innerHTML = `
-      <div style="padding: 40px; font-family: Arial, sans-serif;">
-        <h1 style="color: #1D9BF0; margin-bottom: 20px;">Code Review Report</h1>
-        <h2 style="color: #333; margin-top: 30px;">Code Input</h2>
-        <pre style="background: #f5f5f5; padding: 20px; border-radius: 8px; overflow-x: auto;"><code>${code}</code></pre>
-        <h2 style="color: #333; margin-top: 30px;">Analysis Results</h2>
-        <div style="line-height: 1.6;">${review}</div>
+      <div style="font-family: 'Times New Roman', serif; line-height: 1.5; color: #000;">
+        <h1 style="text-align: center; margin-bottom: 30px; font-size: 20pt;">Code Review Report</h1>
+        
+        <h2 style="font-size: 14pt; margin-top: 25px; margin-bottom: 10px;">Code Input</h2>
+        <pre style="background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; font-family: 'Courier New', monospace; font-size: 10pt; white-space: pre-wrap; word-wrap: break-word;">${code}</pre>
+        
+        <h2 style="font-size: 14pt; margin-top: 25px; margin-bottom: 10px;">Analysis Results</h2>
+        <div style="font-size: 11pt;">${review}</div>
       </div>
     `
     
-    html2pdf().from(element).save('code-review-report.pdf')
+    const opt = {
+      margin: [1, 1.25, 1, 1.25], // Top, Right, Bottom, Left in inches
+      filename: 'code-review-report.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    }
+    
+    html2pdf().set(opt).from(element).save()
     toast({
       title: "PDF Downloaded",
-      description: "Your code review report has been saved.",
+      description: "Your code review report has been saved with A4 formatting.",
     })
   }
 
@@ -237,6 +252,33 @@ console.log(sum(1, 1));`
   function resetApp() {
     setCode(codeTemplates[language] || codeTemplates.javascript)
     setReview('')
+    toast({
+      title: "Reset Complete",
+      description: "Code editor and results have been cleared.",
+    })
+  }
+
+  function copyCode() {
+    // Extract code blocks from the markdown review
+    const codeBlockRegex = /```[\w]*\n([\s\S]*?)```/g
+    const matches = [...review.matchAll(codeBlockRegex)]
+    
+    if (matches.length > 0) {
+      // Copy the last code block (usually the corrected version)
+      const correctedCode = matches[matches.length - 1][1]
+      navigator.clipboard.writeText(correctedCode)
+      toast({
+        title: "Code Copied!",
+        description: "Corrected code has been copied to clipboard.",
+      })
+    } else {
+      // If no code blocks, copy the entire review
+      navigator.clipboard.writeText(review)
+      toast({
+        title: "Content Copied!",
+        description: "Review content has been copied to clipboard.",
+      })
+    }
   }
 
   if (!user) return null
@@ -314,13 +356,21 @@ console.log(sum(1, 1));`
                 />
               </div>
               <div className="action-buttons">
+                <button onClick={resetApp} className="action-btn reset-btn">
+                  Reset
+                </button>
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
                 </button>
                 {review && (
-                  <button onClick={downloadPDF} className="action-btn download-btn">
-                    <Download size={18} /> Download PDF
-                  </button>
+                  <>
+                    <button onClick={copyCode} className="action-btn copy-btn">
+                      Copy Code
+                    </button>
+                    <button onClick={downloadPDF} className="action-btn download-btn">
+                      <Download size={18} /> Download PDF
+                    </button>
+                  </>
                 )}
               </div>
             </div>

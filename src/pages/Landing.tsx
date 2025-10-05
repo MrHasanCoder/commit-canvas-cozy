@@ -1,12 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Code2, Sparkles, History, FileDown } from "lucide-react";
+import { Code2, Sparkles, History, FileDown, Sun, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       {/* Header */}
       <header className="border-b border-border">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -14,9 +25,14 @@ const Landing = () => {
             <Code2 className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">CodeReview AI</h1>
           </div>
-          <Button onClick={() => navigate("/auth")} variant="outline" size="lg">
-            Sign In
-          </Button>
+          <div className="flex gap-3 items-center">
+            <Button onClick={() => setDarkMode(!darkMode)} variant="ghost" size="icon">
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+            <Button onClick={() => navigate("/auth")} variant="outline" size="lg">
+              Sign In
+            </Button>
+          </div>
         </div>
       </header>
 
