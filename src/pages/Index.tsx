@@ -1,4 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { User } from '@supabase/supabase-js'
+import { Button } from "@/components/ui/button"
+import { Sun, Moon, LogOut, Download } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import html2pdf from 'html2pdf.js'
 import "prismjs/themes/prism-tomorrow.css"
 import Editor from "react-simple-code-editor"
 import prism from "prismjs"
@@ -7,8 +13,12 @@ import rehypeHighlight from "rehype-highlight"
 import "highlight.js/styles/github-dark.css"
 import { supabase } from "@/integrations/supabase/client"
 import './CodeReview.css'
+import './HistoryStyles.css'
 
 const Index = () => {
+  const navigate = useNavigate()
+  const { toast } = useToast()
+  const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState('codeReview')
   const [darkMode, setDarkMode] = useState(true)
   const [language, setLanguage] = useState('javascript')
@@ -21,6 +31,7 @@ const Index = () => {
   const [chatInput, setChatInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isChatLoading, setIsChatLoading] = useState(false)
+  const [history, setHistory] = useState<Array<any>>([])
 
   const codeTemplates: Record<string, string> = {
     javascript: ` function sum(a, b) {
@@ -88,8 +99,31 @@ console.log(sum(1, 1));`
   }
 
   useEffect(() => {
+    // Check authentication
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user)
+        loadHistory()
+      } else {
+        navigate('/auth')
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user)
+        loadHistory()
+      } else {
+        navigate('/auth')
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [navigate])
+
+  useEffect(() => {
     prism.highlightAll()
-    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+    document.documentElement.classList.toggle('dark', darkMode)
   }, [darkMode])
 
   useEffect(() => {
@@ -97,6 +131,16 @@ console.log(sum(1, 1));`
       setCode(codeTemplates[language] || codeTemplates.javascript)
     }
   }, [language])
+
+  async function loadHistory() {
+    const { data } = await supabase
+      .from('code_reviews')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10)
+    
+    if (data) setHistory(data)
+  }
 
   async function reviewCode() {
     try {
@@ -109,6 +153,17 @@ console.log(sum(1, 1));`
 
       if (data.success) {
         setReview(data.review)
+        
+        // Save to history
+        await supabase.from('code_reviews').insert({
+          user_id: user?.id,
+          code,
+          language,
+          review: data.review,
+          user_level: userLevel
+        })
+        
+        loadHistory()
       } else {
         setReview('Error analyzing code: ' + (data.error || 'Unknown error'))
       }
@@ -118,6 +173,30 @@ console.log(sum(1, 1));`
       setReview('Error analyzing code. Please try again.')
       setIsLoading(false)
     }
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    navigate('/auth')
+  }
+
+  function downloadPDF() {
+    const element = document.createElement('div')
+    element.innerHTML = `
+      <div style="padding: 40px; font-family: Arial, sans-serif;">
+        <h1 style="color: #1D9BF0; margin-bottom: 20px;">Code Review Report</h1>
+        <h2 style="color: #333; margin-top: 30px;">Code Input</h2>
+        <pre style="background: #f5f5f5; padding: 20px; border-radius: 8px; overflow-x: auto;"><code>${code}</code></pre>
+        <h2 style="color: #333; margin-top: 30px;">Analysis Results</h2>
+        <div style="line-height: 1.6;">${review}</div>
+      </div>
+    `
+    
+    html2pdf().from(element).save('code-review-report.pdf')
+    toast({
+      title: "PDF Downloaded",
+      description: "Your code review report has been saved.",
+    })
   }
 
   async function handleChat(e: React.FormEvent) {
@@ -160,18 +239,28 @@ console.log(sum(1, 1));`
     setReview('')
   }
 
+  if (!user) return null
+
   return (
     <div className={`app-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <aside className="sidebar">
-        <div className="logo">Smart Code Analysis</div>
+        <div className="logo">CodeReview AI</div>
         <nav>
           <ul>
             <li className={activeTab === 'codeReview' ? 'active' : ''} onClick={() => setActiveTab('codeReview')}>Code Review</li>
+            <li className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}>History</li>
             <li className={activeTab === 'chat' ? 'active' : ''} onClick={() => setActiveTab('chat')}>Chat</li>
             <li className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>Settings</li>
           </ul>
         </nav>
-        <button className="reset-btn" onClick={resetApp}>Reset</button>
+        <div className="sidebar-footer">
+          <button className="icon-btn" onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button className="icon-btn" onClick={handleSignOut}>
+            <LogOut size={20} />
+          </button>
+        </div>
       </aside>
 
       <main>
@@ -228,6 +317,11 @@ console.log(sum(1, 1));`
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
                 </button>
+                {review && (
+                  <button onClick={downloadPDF} className="action-btn download-btn">
+                    <Download size={18} /> Download PDF
+                  </button>
+                )}
               </div>
             </div>
             <div className="right">
@@ -243,6 +337,32 @@ console.log(sum(1, 1));`
               </div>
             </div>
           </>
+        )}
+
+        {activeTab === 'history' && (
+          <div className="history-container">
+            <h2>Review History</h2>
+            <div className="history-list">
+              {history.length === 0 ? (
+                <div className="placeholder-text">No reviews yet. Start analyzing code to build your history!</div>
+              ) : (
+                history.map((item) => (
+                  <div key={item.id} className="history-item" onClick={() => {
+                    setCode(item.code)
+                    setReview(item.review)
+                    setLanguage(item.language)
+                    setActiveTab('codeReview')
+                  }}>
+                    <div className="history-header">
+                      <span className="history-language">{item.language}</span>
+                      <span className="history-date">{new Date(item.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="history-preview">{item.code.substring(0, 100)}...</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         )}
 
         {activeTab === 'chat' && (

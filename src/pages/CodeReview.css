@@ -113,12 +113,40 @@ body,
   font-weight: 500;
 }
 
-.reset-btn {
+.sidebar-footer {
   margin-top: auto;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
   margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.icon-btn {
+  flex: 1;
   padding: 0.6rem;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+  box-shadow: var(--shadow-hover);
+}
+
+.reset-btn {
+  padding: 0.6rem 1.2rem;
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
@@ -206,7 +234,8 @@ main .right:hover {
   gap: 0.5rem;
 }
 
-.analyze-btn {
+.analyze-btn,
+.download-btn {
   background-color: var(--accent-color);
   color: white;
   border: none;
@@ -216,6 +245,17 @@ main .right:hover {
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.download-btn {
+  background-color: var(--success-color);
+}
+
+.download-btn:hover:not(:disabled) {
+  background-color: var(--success-hover);
 }
 
 .analyze-btn:hover:not(:disabled) {
