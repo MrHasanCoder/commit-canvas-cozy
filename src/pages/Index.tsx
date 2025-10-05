@@ -353,7 +353,9 @@ console.log(sum(1, 1));`
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
                     fontSize: 14,
-                    minHeight: '100%',
+                    minHeight: 400,
+                    height: 'auto',
+                    width: '100%',
                     outline: 'none'
                   }}
                   className="dynamic-editor"
