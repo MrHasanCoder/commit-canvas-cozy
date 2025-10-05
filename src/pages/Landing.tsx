@@ -23,7 +23,7 @@ const Landing = () => {
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Code2 className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">CodeReview AI</h1>
+            <h1 className="text-2xl font-bold text-foreground">Smart Code Review</h1>
           </div>
           <div className="flex gap-3 items-center">
             <Button onClick={() => setDarkMode(!darkMode)} variant="ghost" size="icon">
@@ -93,7 +93,7 @@ const Landing = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-6 text-center text-muted-foreground">
-          <p>&copy; 2025 CodeReview AI. All rights reserved.</p>
+          <p>&copy; 2025 Smart Code Review. All rights reserved.</p>
         </div>
       </footer>
     </div>

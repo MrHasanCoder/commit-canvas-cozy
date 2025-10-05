@@ -297,7 +297,7 @@ console.log(sum(1, 1));`
   return (
     <div className={`app-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <aside className="sidebar">
-        <div className="logo">CodeReview AI</div>
+        <div className="logo">Smart Code Review</div>
         <nav>
           <ul>
             <li className={activeTab === 'codeReview' ? 'active' : ''} onClick={() => setActiveTab('codeReview')}>Code Review</li>
