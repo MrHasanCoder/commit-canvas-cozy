@@ -190,6 +190,13 @@ main .right {
   flex: 1;
 }
 
+main .left .code,
+main .right .result-content {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
 main .left:hover,
 main .right:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -309,15 +316,14 @@ main .right:hover {
 
 .code {
   flex: 1;
-  overflow: visible;
+  overflow: auto;
   background-color: var(--bg-tertiary);
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-tertiary);
   border-radius: 0;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-  min-height: 500px;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -325,13 +331,9 @@ main .right:hover {
 }
 
 .dynamic-editor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100% !important;
-  background-color: var(--bg-tertiary) !important;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
 }
 
 .dynamic-editor textarea {
