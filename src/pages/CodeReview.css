@@ -335,13 +335,11 @@ main .right:hover {
   min-height: 400px;
   overflow-y: auto !important;
   overflow-x: auto !important;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-color) var(--bg-tertiary);
+  scrollbar-width: none; /* Firefox - hide scrollbar */
 }
 
 .dynamic-editor::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  display: none; /* WebKit - hide scrollbar */
 }
 
 .dynamic-editor::-webkit-scrollbar-track {
@@ -366,7 +364,10 @@ main .right:hover {
   user-select: text !important;
   -webkit-user-select: text !important;
   min-height: 100% !important;
-  overflow: visible !important;
+  overflow: auto !important;
+  position: relative !important;
+  z-index: 2;
+  background: transparent;
 }
 
 .dynamic-editor textarea::selection {
@@ -377,6 +378,8 @@ main .right:hover {
   background-color: transparent !important;
   pointer-events: none !important;
   min-height: 100% !important;
+  position: relative;
+  z-index: 1;
 }
 
 .code::-webkit-scrollbar {
