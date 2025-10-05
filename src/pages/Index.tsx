@@ -367,11 +367,9 @@ console.log(sum(1, 1));`
                 />
               </div>
               <div className="action-buttons">
-                {review && (
-                  <button onClick={copyCode} className="action-btn copy-btn">
-                    Copy Code
-                  </button>
-                )}
+                <button onClick={resetApp} className="action-btn reset-btn">
+                  Reset
+                </button>
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
                 </button>
@@ -393,8 +391,8 @@ console.log(sum(1, 1));`
               <div className="action-buttons">
                 {review && (
                   <>
-                    <button onClick={resetApp} className="action-btn reset-btn">
-                      Reset
+                    <button onClick={copyCode} className="action-btn copy-btn">
+                      Copy Code
                     </button>
                     <button onClick={downloadPDF} className="action-btn download-btn">
                       Generate PDF
