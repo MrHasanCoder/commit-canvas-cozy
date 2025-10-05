@@ -344,7 +344,9 @@ main .right:hover {
   -webkit-user-select: text !important;
   min-height: 100% !important;
   overflow: auto !important; /* enable inner scrolling */
-  position: relative !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
   z-index: 2;
   background: transparent;
   width: 100%;
