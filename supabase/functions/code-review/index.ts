@@ -36,12 +36,17 @@ Identify code smells, performance issues, bad practices, or areas for improvemen
 Provide specific, actionable recommendations following industry best practices and ${language} conventions.
 
 ## Corrected & Optimized Code
-**IMPORTANT**: Provide a complete, secure, and optimized version of the code that:
+**CRITICAL REQUIREMENTS**: Provide a complete, secure, and optimized version that is:
+- **SHORTER or equal length** to the original code - never longer
+- **Lower time complexity** - optimize algorithms and loops
+- **More concise** - remove redundancy and unnecessary code
 - Fixes all security vulnerabilities
 - Implements all recommended improvements
 - Follows best coding practices
-- Includes inline comments explaining key changes
-- Is production-ready and secure
+- Includes brief inline comments only for key changes
+- Production-ready and secure
+
+**If the original code is already optimal, say so instead of providing unnecessary changes.**
 
 Format the corrected code in a markdown code block with proper syntax highlighting.
 
