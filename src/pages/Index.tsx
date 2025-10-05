@@ -354,19 +354,20 @@ console.log(sum(1, 1));`
                     fontFamily: '"Fira code", "Fira Mono", monospace',
                     fontSize: 14,
                     minHeight: 400,
-                    height: 'auto',
+                    height: '100%',
                     width: '100%',
-                    outline: 'none'
+                    outline: 'none',
+                    overflow: 'auto'
                   }}
                   className="dynamic-editor"
                 />
               </div>
               <div className="action-buttons">
-                <button onClick={resetApp} className="action-btn reset-btn">
-                  Reset
-                </button>
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
+                </button>
+                <button onClick={copyCode} className="action-btn copy-btn" disabled={!review}>
+                  Copy Code
                 </button>
               </div>
             </div>
@@ -384,16 +385,12 @@ console.log(sum(1, 1));`
                 )}
               </div>
               <div className="action-buttons">
-                {review && (
-                  <>
-                    <button onClick={copyCode} className="action-btn copy-btn">
-                      Copy Code
-                    </button>
-                    <button onClick={downloadPDF} className="action-btn download-btn">
-                      Generate PDF
-                    </button>
-                  </>
-                )}
+                <button onClick={resetApp} className="action-btn reset-btn">
+                  Reset
+                </button>
+                <button onClick={downloadPDF} className="action-btn download-btn" disabled={!review}>
+                  Generate PDF
+                </button>
               </div>
             </div>
           </>
