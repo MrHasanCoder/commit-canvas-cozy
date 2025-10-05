@@ -339,6 +339,9 @@ main .right:hover {
 .dynamic-editor textarea {
   outline: none !important;
   caret-color: var(--accent-color) !important;
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 .dynamic-editor textarea::selection {
@@ -347,6 +350,7 @@ main .right:hover {
 
 .dynamic-editor pre {
   background-color: transparent !important;
+  pointer-events: none !important;
 }
 
 .code::-webkit-scrollbar {

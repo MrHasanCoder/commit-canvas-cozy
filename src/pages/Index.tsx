@@ -342,19 +342,19 @@ console.log(sum(1, 1));`
               <div className="code">
                 <Editor
                   value={code}
-                  onValueChange={code => setCode(code)}
+                  onValueChange={setCode}
                   highlight={code => {
                     const lang = language.toLowerCase();
                     const grammar = prism.languages[lang] || prism.languages.javascript;
                     return prism.highlight(code, grammar, lang);
                   }}
-                  padding={10}
+                  padding={15}
+                  textareaId="code-editor"
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
                     fontSize: 14,
-                    height: "100%",
-                    width: "100%",
-                    overflow: 'auto'
+                    minHeight: '100%',
+                    outline: 'none'
                   }}
                   className="dynamic-editor"
                 />
