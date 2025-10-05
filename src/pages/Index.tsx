@@ -187,30 +187,41 @@ console.log(sum(1, 1));`
 
   function downloadPDF() {
     const element = document.createElement('div')
+    element.style.padding = '40px'
+    element.style.backgroundColor = 'white'
+    element.style.color = '#222'
+    element.style.fontFamily = 'Arial, sans-serif'
+    element.style.lineHeight = '1.5'
+    
+    // Format the result to show sections clearly
+    const formattedResult = review
+      .replace(/##\s+(.+)/g, '<h2 style="color: #222; margin-top: 25px; margin-bottom: 15px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">$1</h2>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>')
+    
     element.innerHTML = `
-      <div style="font-family: 'Times New Roman', serif; line-height: 1.5; color: #000;">
-        <h1 style="text-align: center; margin-bottom: 30px; font-size: 20pt;">Code Review Report</h1>
-        
-        <h2 style="font-size: 14pt; margin-top: 25px; margin-bottom: 10px;">Code Input</h2>
-        <pre style="background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6; font-family: 'Courier New', monospace; font-size: 10pt; white-space: pre-wrap; word-wrap: break-word;">${code}</pre>
-        
-        <h2 style="font-size: 14pt; margin-top: 25px; margin-bottom: 10px;">Analysis Results</h2>
-        <div style="font-size: 11pt;">${review}</div>
-      </div>
+      <h1 style="color: #4a6cf7; margin-bottom: 30px; font-size: 22px; font-weight: bold; text-align: center;">Smart Code Review Report</h1>
+      
+      <h2 style="color: #222; margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">Original Code</h2>
+      <pre style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #e0e0e0; white-space: pre-wrap; word-wrap: break-word; font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.6;">${code}</pre>
+      
+      <h2 style="color: #222; margin-top: 30px; margin-bottom: 15px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">Code Analysis</h2>
+      <div style="white-space: pre-wrap; word-wrap: break-word; font-size: 12px; line-height: 1.6;">${formattedResult}</div>
     `
     
     const opt = {
-      margin: [1, 1.25, 1, 1.25], // Top, Right, Bottom, Left in inches
-      filename: 'code-review-report.pdf',
+      margin: [1.0, 1.25, 1.0, 1.25],
+      filename: 'Smart_Code_Review_Report.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     }
     
     html2pdf().set(opt).from(element).save()
     toast({
       title: "PDF Downloaded",
-      description: "Your code review report has been saved with A4 formatting.",
+      description: "Your code review report has been saved as Smart_Code_Review_Report.pdf",
     })
   }
 
@@ -356,21 +367,13 @@ console.log(sum(1, 1));`
                 />
               </div>
               <div className="action-buttons">
-                <button onClick={resetApp} className="action-btn reset-btn">
-                  Reset
-                </button>
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
                 </button>
                 {review && (
-                  <>
-                    <button onClick={copyCode} className="action-btn copy-btn">
-                      Copy Code
-                    </button>
-                    <button onClick={downloadPDF} className="action-btn download-btn">
-                      <Download size={18} /> Download PDF
-                    </button>
-                  </>
+                  <button onClick={copyCode} className="action-btn copy-btn">
+                    Copy Code
+                  </button>
                 )}
               </div>
             </div>
@@ -379,8 +382,20 @@ console.log(sum(1, 1));`
                 <h3>Analysis Results</h3>
               </div>
               <div className="result-content">
-                {review ? (
-                  <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
+                {isLoading ? (
+                  <div className="placeholder-text">Analyzing your code...</div>
+                ) : review ? (
+                  <>
+                    <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
+                    <div className="result-actions">
+                      <button onClick={resetApp} className="action-btn reset-btn">
+                        Reset
+                      </button>
+                      <button onClick={downloadPDF} className="action-btn download-btn">
+                        Generate PDF
+                      </button>
+                    </div>
+                  </>
                 ) : (
                   <div className="placeholder-text">Click "Analyze Code" to see results here</div>
                 )}

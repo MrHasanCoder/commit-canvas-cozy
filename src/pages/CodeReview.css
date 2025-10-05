@@ -13,26 +13,26 @@ body,
 
 /* Theme Variables */
 :root {
-  --bg-primary: #1a1b26;
-  --bg-secondary: #24283b;
-  --bg-tertiary: #16161e;
-  --text-primary: #c0caf5;
-  --text-secondary: #a9b1d6;
-  --accent-color: #7aa2f7;
-  --accent-hover: #5d7fd9;
-  --accent-light: #e6ecff;
-  --border-color: #414868;
-  --success-color: #38b000;
-  --success-hover: #2d9000;
-  --error-color: #d90429;
-  --error-hover: #b80021;
-  --warning-color: #ff9e00;
-  --warning-hover: #e08c00;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f1f3f5;
+  --text-primary: #222222;
+  --text-secondary: #6c757d;
+  --accent-color: #4a6cf7;
+  --accent-hover: #3854d6;
+  --accent-light: #e8ecff;
+  --border-color: #e0e0e0;
+  --success-color: #28a745;
+  --success-hover: #218838;
+  --error-color: #dc3545;
+  --error-hover: #c82333;
+  --warning-color: #ffc107;
+  --warning-hover: #e0a800;
   --sidebar-width: 220px;
   --header-height: 60px;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.15);
-  --shadow-inset: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.03);
   --border-radius: 8px;
   --transition: all 0.3s ease;
 }
@@ -207,18 +207,28 @@ main .right:hover {
 
 .action-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 0;
-  background-color: var(--bg-tertiary);
+  background-color: transparent;
   padding: 1rem;
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: none;
   justify-content: center;
   border-top: 1px solid var(--border-color);
   width: 100%;
   position: relative;
   bottom: 0;
-  min-height: 4.5rem;
+  min-height: auto;
+}
+
+.result-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--border-color);
+  justify-content: center;
+  width: 100%;
 }
 
 .action-btn {
@@ -243,9 +253,10 @@ main .right:hover {
   background-color: var(--accent-color);
   color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 1.5rem;
   border-radius: var(--border-radius);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow);
@@ -253,6 +264,13 @@ main .right:hover {
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+}
+
+.analyze-btn:hover:not(:disabled),
+.copy-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
 .download-btn {
@@ -265,28 +283,12 @@ main .right:hover {
   transform: translateY(-2px);
 }
 
-.copy-btn {
-  background-color: #9333ea;
-}
-
-.copy-btn:hover:not(:disabled) {
-  background-color: #7e22ce;
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
-}
-
 .reset-btn {
-  background-color: var(--warning-color);
+  background-color: var(--text-secondary);
 }
 
 .reset-btn:hover:not(:disabled) {
-  background-color: var(--warning-hover);
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
-}
-
-.analyze-btn:hover:not(:disabled) {
-  background-color: var(--accent-hover);
+  background-color: #5a6268;
   box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
 }
