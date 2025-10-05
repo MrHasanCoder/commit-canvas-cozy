@@ -372,8 +372,8 @@ console.log(sum(1, 1));`
                 <button onClick={reviewCode} className="action-btn analyze-btn" disabled={isLoading}>
                   {isLoading ? 'Analyzing...' : 'Analyze Code'}
                 </button>
-                <button onClick={copyCode} className="action-btn copy-btn" disabled={!review}>
-                  Copy Code
+                <button onClick={resetApp} className="action-btn reset-btn">
+                  Reset
                 </button>
               </div>
             </div>
@@ -391,8 +391,8 @@ console.log(sum(1, 1));`
                 )}
               </div>
               <div className="action-buttons">
-                <button onClick={resetApp} className="action-btn reset-btn">
-                  Reset
+                <button onClick={copyCode} className="action-btn copy-btn" disabled={!review}>
+                  Copy Code
                 </button>
                 <button onClick={downloadPDF} className="action-btn download-btn" disabled={!review}>
                   Generate PDF

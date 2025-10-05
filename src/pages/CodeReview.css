@@ -340,6 +340,7 @@ main .right:hover {
 .dynamic-editor,
 .editor-textarea {
   pointer-events: auto !important;
+  cursor: text !important;
 }
 
 /* Target the editor textarea explicitly */
@@ -349,6 +350,8 @@ main .right:hover {
   caret-color: var(--accent-color) !important;
   user-select: text !important;
   -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
   position: absolute !important;
   inset: 0;
   z-index: 2;
@@ -358,6 +361,8 @@ main .right:hover {
   resize: none !important;
   border: none !important;
   padding: 15px !important;
+  cursor: text !important;
+  font-family: 'Fira Code', 'Courier New', monospace !important;
 }
 
 .dynamic-editor textarea::selection,
