@@ -182,7 +182,7 @@ console.log(sum(1, 1));`
 
   async function handleSignOut() {
     await supabase.auth.signOut()
-    navigate('/auth')
+    navigate('/')
   }
 
   function downloadPDF() {
