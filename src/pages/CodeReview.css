@@ -379,7 +379,7 @@ main .right:hover {
   background-color: var(--bg-tertiary);
   border-radius: 0;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-  max-height: calc(100vh - 200px);
+  min-height: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--accent-color) var(--bg-tertiary);
   border: 1px solid var(--border-color);
