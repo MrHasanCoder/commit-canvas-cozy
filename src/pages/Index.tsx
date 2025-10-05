@@ -350,6 +350,12 @@ console.log(sum(1, 1));`
                   }}
                   padding={15}
                   textareaId="code-editor"
+                  textareaClassName="editor-textarea"
+                  preClassName="editor-pre"
+                  onKeyDown={(e) => {
+                    // Prevent global shortcuts from interfering with typing
+                    e.stopPropagation();
+                  }}
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
                     fontSize: 14,

@@ -316,7 +316,7 @@ main .right:hover {
 
 .code {
   flex: 1;
-  overflow: hidden; /* inner editor handles scrolling */
+  overflow: auto; /* allow parent to scroll if needed */
   background-color: var(--bg-tertiary);
   border-radius: 0;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
@@ -326,7 +326,9 @@ main .right:hover {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-color);
+  scroll-behavior: smooth;
 }
+
 
 .dynamic-editor {
   position: relative;
@@ -334,35 +336,46 @@ main .right:hover {
   height: 100%;
   min-height: 400px;
   overflow: auto; /* inner scroll for editor */
+  -webkit-overflow-scrolling: touch;
 }
 
-.dynamic-editor textarea {
+/* Ensure editor wrapper and textarea receive interactions */
+.dynamic-editor,
+.editor-textarea {
+  pointer-events: auto !important;
+}
+
+/* Target the editor textarea explicitly */
+.dynamic-editor textarea,
+.editor-textarea {
   outline: none !important;
   caret-color: var(--accent-color) !important;
-  pointer-events: auto !important;
   user-select: text !important;
   -webkit-user-select: text !important;
   min-height: 100% !important;
   overflow: auto !important; /* enable inner scrolling */
   position: absolute !important;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 2;
   background: transparent;
   width: 100%;
   height: 100%;
 }
 
-.dynamic-editor textarea::selection {
+.dynamic-editor textarea::selection,
+.editor-textarea::selection {
   background-color: var(--accent-light) !important;
 }
 
-.dynamic-editor pre {
+/* Highlight layer must never block interactions */
+.dynamic-editor pre,
+.editor-pre {
   background-color: transparent !important;
   pointer-events: none !important;
   min-height: 100% !important;
   position: relative;
   z-index: 1;
+  white-space: pre !important;
 }
 
 .code::-webkit-scrollbar {
