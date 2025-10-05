@@ -385,20 +385,18 @@ console.log(sum(1, 1));`
                 {isLoading ? (
                   <div className="placeholder-text">Analyzing your code...</div>
                 ) : review ? (
-                  <>
-                    <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
-                    <div className="result-actions">
-                      <button onClick={resetApp} className="action-btn reset-btn">
-                        Reset
-                      </button>
-                      <button onClick={downloadPDF} className="action-btn download-btn">
-                        Generate PDF
-                      </button>
-                    </div>
-                  </>
+                  <Markdown rehypePlugins={[rehypeHighlight]}>{review}</Markdown>
                 ) : (
                   <div className="placeholder-text">Click "Analyze Code" to see results here</div>
                 )}
+              </div>
+              <div className="action-buttons">
+                <button onClick={resetApp} className="action-btn reset-btn" disabled={!review}>
+                  Reset
+                </button>
+                <button onClick={downloadPDF} className="action-btn download-btn" disabled={!review}>
+                  Generate PDF
+                </button>
               </div>
             </div>
           </>
