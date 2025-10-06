@@ -8,6 +8,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Code2, Sun, Moon, Eye, EyeOff } from "lucide-react";
+import { z } from "zod";
+
+const signUpSchema = z.object({
+  email: z.string().email("Invalid email format").max(255, "Email too long"),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain an uppercase letter")
+    .regex(/[a-z]/, "Password must contain a lowercase letter")
+    .regex(/[0-9]/, "Password must contain a number"),
+  fullName: z.string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name too long"),
+  phoneNumber: z.string()
+    .regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number format")
+    .optional()
+    .or(z.literal("")),
+});
+
+const signInSchema = z.object({
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(1, "Password is required"),
+});
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -44,6 +67,24 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate inputs
+    const validation = signUpSchema.safeParse({
+      email,
+      password,
+      fullName,
+      phoneNumber,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast({
+        title: "Validation Error",
+        description: firstError.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "Error",
@@ -84,6 +125,20 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate inputs
+    const validation = signInSchema.safeParse({ email, password });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast({
+        title: "Validation Error",
+        description: firstError.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({

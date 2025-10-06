@@ -9,10 +9,45 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ success: false, error: "Authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { code, language = 'javascript', userLevel = 'intermediate' } = await req.json();
 
-    if (!code) {
-      return new Response(JSON.stringify({ success: false, error: "Code is required" }), {
+    // Input validation
+    const MAX_CODE_LENGTH = 50000;
+    const VALID_LANGUAGES = ['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'csharp', 'go', 'rust', 'ruby', 'php', 'swift', 'kotlin', 'scala', 'r', 'sql', 'html', 'css'];
+    const VALID_LEVELS = ['beginner', 'intermediate', 'advanced'];
+
+    if (!code || typeof code !== 'string') {
+      return new Response(JSON.stringify({ success: false, error: "Valid code is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (code.length > MAX_CODE_LENGTH) {
+      return new Response(JSON.stringify({ success: false, error: "Code exceeds maximum length of 50KB" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!VALID_LANGUAGES.includes(language.toLowerCase())) {
+      return new Response(JSON.stringify({ success: false, error: "Invalid programming language" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!VALID_LEVELS.includes(userLevel.toLowerCase())) {
+      return new Response(JSON.stringify({ success: false, error: "Invalid user level" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -95,8 +130,12 @@ Be thorough but concise. Format your entire response in markdown.`;
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error in code-review function:", error);
-    return new Response(JSON.stringify({ success: false, error: error instanceof Error ? error.message : "Unknown error" }), {
+    console.error("[code-review]", {
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+    return new Response(JSON.stringify({ success: false, error: "An error occurred processing your request" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

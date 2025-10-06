@@ -9,10 +9,44 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ success: false, error: "Authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { message, context = [] } = await req.json();
 
-    if (!message) {
-      return new Response(JSON.stringify({ success: false, error: "Message is required" }), {
+    // Input validation
+    const MAX_MESSAGE_LENGTH = 10000;
+    const MAX_CONTEXT_MESSAGES = 50;
+
+    if (!message || typeof message !== 'string') {
+      return new Response(JSON.stringify({ success: false, error: "Valid message is required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (message.trim().length === 0) {
+      return new Response(JSON.stringify({ success: false, error: "Message cannot be empty" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return new Response(JSON.stringify({ success: false, error: "Message exceeds maximum length" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!Array.isArray(context) || context.length > MAX_CONTEXT_MESSAGES) {
+      return new Response(JSON.stringify({ success: false, error: "Invalid context data" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -82,8 +116,12 @@ Be friendly, supportive, and informative.`;
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error in ai-chat function:", error);
-    return new Response(JSON.stringify({ success: false, error: error instanceof Error ? error.message : "Unknown error" }), {
+    console.error("[ai-chat]", {
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
+    return new Response(JSON.stringify({ success: false, error: "An error occurred processing your request" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
