@@ -35,6 +35,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isChatLoading, setIsChatLoading] = useState(false)
   const [history, setHistory] = useState<Array<any>>([])
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const codeTemplates: Record<string, string> = {
     javascript: ` function sum(a, b) {
@@ -296,14 +297,27 @@ console.log(sum(1, 1));`
 
   return (
     <div className={`app-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-      <aside className="sidebar">
+      {/* Mobile Header with Hamburger */}
+      <div className="mobile-header">
+        <button className="hamburger-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div className="mobile-logo">Smart Code Review</div>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isSidebarOpen && <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>}
+
+      <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="logo">Smart Code Review</div>
         <nav>
           <ul>
-            <li className={activeTab === 'codeReview' ? 'active' : ''} onClick={() => setActiveTab('codeReview')}>Code Review</li>
-            <li className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}>History</li>
-            <li className={activeTab === 'chat' ? 'active' : ''} onClick={() => setActiveTab('chat')}>Chat</li>
-            <li className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>Settings</li>
+            <li className={activeTab === 'codeReview' ? 'active' : ''} onClick={() => { setActiveTab('codeReview'); setIsSidebarOpen(false); }}>Code Review</li>
+            <li className={activeTab === 'history' ? 'active' : ''} onClick={() => { setActiveTab('history'); setIsSidebarOpen(false); }}>History</li>
+            <li className={activeTab === 'chat' ? 'active' : ''} onClick={() => { setActiveTab('chat'); setIsSidebarOpen(false); }}>Chat</li>
+            <li className={activeTab === 'settings' ? 'active' : ''} onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}>Settings</li>
           </ul>
         </nav>
         <div className="sidebar-footer">

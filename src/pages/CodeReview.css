@@ -66,6 +66,63 @@ body,
   width: 100%;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  position: relative;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 100;
+  gap: 1rem;
+}
+
+.mobile-logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.hamburger-btn {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  transition: var(--transition);
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
 }
 
 /* Sidebar */
@@ -727,4 +784,253 @@ input:checked + .slider:before {
 
 .select-input {
   min-width: 150px;
+}
+
+/* ===========================
+   MOBILE RESPONSIVE STYLES
+   =========================== */
+
+@media (max-width: 768px) {
+  /* Show mobile header */
+  .mobile-header {
+    display: flex;
+  }
+
+  /* Show sidebar overlay when open */
+  .sidebar-overlay {
+    display: block;
+  }
+
+  /* Adjust app container for mobile header */
+  .app-container {
+    padding-top: 60px;
+  }
+
+  /* Sidebar mobile styles */
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: -100%;
+    width: 80%;
+    max-width: 280px;
+    height: calc(100vh - 60px);
+    z-index: 95;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.sidebar-open {
+    left: 0;
+  }
+
+  /* Stack main content vertically */
+  main {
+    flex-direction: column;
+    padding: 0.5rem;
+    height: calc(100vh - 60px);
+    gap: 0.5rem;
+  }
+
+  /* Full width code review sections on mobile */
+  main .left,
+  main .right {
+    height: auto;
+    min-height: 300px;
+    max-height: 50vh;
+    flex-basis: auto;
+  }
+
+  /* Smaller headers */
+  .code-header, .result-header {
+    padding: 0.75rem;
+    min-height: auto;
+  }
+
+  .code-header h3, .result-header h3 {
+    font-size: 1rem;
+  }
+
+  /* Adjust code editor */
+  .code {
+    min-height: 200px;
+  }
+
+  /* Smaller action buttons */
+  .action-buttons {
+    padding: 0.75rem 0.5rem;
+    gap: 0.5rem;
+    min-height: auto;
+    flex-wrap: wrap;
+  }
+
+  .action-btn,
+  .analyze-btn,
+  .download-btn,
+  .copy-btn,
+  .reset-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
+  }
+
+  /* Language selector */
+  .language-selector {
+    flex-shrink: 0;
+  }
+
+  .language-selector select {
+    font-size: 0.85rem;
+    padding: 0.4rem 1.5rem 0.4rem 0.6rem;
+    min-width: 120px;
+  }
+
+  /* Result content adjustments */
+  .result-content {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .result-content h2 {
+    font-size: 1.1rem;
+  }
+
+  .result-content h3 {
+    font-size: 1rem;
+  }
+
+  /* Chat container */
+  .chat-container {
+    height: calc(100vh - 70px);
+  }
+
+  .chat-messages {
+    padding: 1rem;
+  }
+
+  .chat-message {
+    padding: 0.75rem;
+  }
+
+  .chat-input-form {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .chat-input {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .send-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Settings container */
+  .settings-container {
+    padding: 1rem;
+  }
+
+  .settings-container h2 {
+    font-size: 1.3rem;
+  }
+
+  .settings-section h3 {
+    font-size: 1.1rem;
+  }
+
+  /* History container */
+  .history-container {
+    padding: 1rem;
+    height: calc(100vh - 70px);
+  }
+
+  .history-container h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .history-item {
+    padding: 1rem;
+  }
+
+  .history-language {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .history-date {
+    font-size: 0.8rem;
+  }
+
+  .history-preview {
+    font-size: 0.85rem;
+  }
+
+  /* Logo adjustments */
+  .logo {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Sidebar footer */
+  .sidebar-footer {
+    margin: 1rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .mobile-logo {
+    font-size: 1rem;
+  }
+
+  .sidebar {
+    width: 90%;
+  }
+
+  main .left,
+  main .right {
+    max-height: 45vh;
+  }
+
+  .action-btn,
+  .analyze-btn,
+  .download-btn,
+  .copy-btn,
+  .reset-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .result-content {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+  }
+
+  .result-content pre {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Tablet landscape and small desktop */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .code-header h3,
+  .result-header h3 {
+    font-size: 1rem;
+  }
+
+  .action-btn,
+  .analyze-btn,
+  .download-btn,
+  .copy-btn,
+  .reset-btn {
+    font-size: 0.9rem;
+    padding: 0.65rem 1.3rem;
+  }
 }
